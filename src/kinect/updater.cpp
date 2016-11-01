@@ -18,6 +18,9 @@
 
 #include <opencv2/highgui/highgui.hpp>
 
+#include <ros/init.h>
+#include <image_recognition_msgs/Recognize.h>
+
 // ----------------------------------------------------------------------------------------------------
 
 // Calculates which depth points are in the given convex hull (in the EntityUpdate), updates the mask,
@@ -74,8 +77,22 @@ void refitConvexHull(const rgbd::Image& image, const geo::Pose3D& sensor_pose, c
 
 // ----------------------------------------------------------------------------------------------------
 
-Updater::Updater()
+Updater::Updater(): n_("~")
 {
+    classification_client_ = n.serviceClient<image_recognition_msgs::Recognize>("association_classification");
+
+    image_recognition_msgs::Recognition srv;
+//    srv.request.a = atoll(argv[1]);
+//    srv.request.b = atoll(argv[2]);
+//    if (client.call(srv))
+//    {
+//        ROS_INFO("Sum: %ld", (long int)srv.response.sum);
+//    }
+//    else
+//    {
+//        ROS_ERROR("Failed to call service add_two_ints");
+//        return 1;
+//    }
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -311,6 +328,12 @@ bool Updater::update(const ed::WorldModel& world, const rgbd::ImageConstPtr& ima
         up.chull.z_min += 0.01;
         refitConvexHull(*image, sensor_pose, cam_model, segmenter_, up);
     }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - -
+    // Classify the segments
+
+
+
 
     // - - - - - - - - - - - - - - - - - - - - - - - -
     // Perform association and update
