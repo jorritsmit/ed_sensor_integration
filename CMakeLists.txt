@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   kdl_parser
   message_generation
   visualization_msgs
+  image_recognition_msgs
 )
 
 # ------------------------------------------------------------------------------------------------
